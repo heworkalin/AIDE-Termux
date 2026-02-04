@@ -1,68 +1,79 @@
 apply plugin: 'com.android.application'
 
 android {
-	compileSdkVersion 21
-	buildToolsVersion "21.1.0"
+    // 已配置：显式指定命名空间
+    namespace "com.aide.termux"
+    // 核心修改 1：升级 compileSdkVersion 至 36，满足 androidx.core 依赖的编译要求
+    compileSdkVersion 36
+    // 已删除：过时的 buildToolsVersion 配置
 
-	defaultConfig {
-		applicationId "com.aide.termux"
-		minSdkVersion 21
-		targetSdkVersion 34
-		// namespace "com.termux"
-		// minSdk 21
-		// targetSdk 28
+    defaultConfig {
+        applicationId "com.aide.termux"
+        minSdk 23
+        //targetSdkVersion 34 // 保持不变，不影响运行时行为
+        versionCode 1020
+        versionName "0.119.0-beta.1"
+        targetSdk 36
+    }
 
-		versionCode 1020
-		versionName "0.119.0-beta.1"
-	}
+    signingConfigs{
+        // release自行配置（保留不变，后续打包时补充签名文件即可）
+        release{
+            keyAlias "tk5pjdcv"
+            keyPassword "tk5pjdcv"
+            storePassword "tk5pjdcv"
+            storeFile file("android")
+        }
+        // 核心修改 2：注释掉自定义的 debug 签名配置，使用 Android Studio 默认 debug 签名
+        /*
+        debug{
+            keyAlias "androiddebug"
+            keyPassword "123789456"
+            storePassword "123789456"
+            storeFile file("app-debug.jks")
+        }
+        */
+    }
 
-	
-	signingConfigs{
-		// release自行配置
-		release{
-			keyAlias "AIDE+"
-			keyPassword "123789456"
-			storePassword "123789456"
-			storeFile file("app-release.jks")
-		}
-		debug{
-			keyAlias "androiddebug"
-			keyPassword "123789456"
-			storePassword "123789456"
-			storeFile file("app-debug.jks")
-		}
-		
-	}
-	
-	buildFeatures{
-		// true则启用 viewBinding
-		viewBinding false
-		// 使用Androidx，暂时先这样
-		useAndroidx true
-	}
-	
-	buildTypes {
-		// 仅支持release配置，仅当值为true时启用
-		release {
-			// 资源混淆
-			shrinkResources false
-			// 代码混淆[增量构建失效]
-			minifyEnabled !true
-			// 代码混淆配置文件
-			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-		}
-	}
-	
-	compileOptions {
-		sourceCompatibility JavaVersion.VERSION_8
-		targetCompatibility JavaVersion.VERSION_8
-	}
-	
+    // 已配置：仅保留 buildFeatures 核心职责
+    buildFeatures {
+        viewBinding false
+    }
+
+    buildTypes {
+        release {
+            shrinkResources false
+            minifyEnabled false
+            // 保留：指定 release 签名配置（后续打包时确保 app-release.jks 存在即可）
+            signingConfig signingConfigs.release
+        }
+        debug {
+            // 核心修改 3：注释掉自定义 debug 签名配置的引用，使用默认签名
+            // signingConfig signingConfigs.debug
+        }
+    }
+
+    // 已配置：兼容的 Java 8 编译版本
+    compileOptions {
+        sourceCompatibility "1.8"
+        targetCompatibility "1.8"
+    }
+
+    // 可选：处理 extractNativeLibs 警告（若删除了 Manifest 中的对应属性，可按需配置）
+    /*
+    packagingOptions {
+        jniLibs {
+            extractNativeLibs = false
+        }
+    }
+    */
 }
 
 dependencies {
-	compile fileTree(dir: 'libs', include: ['*.jar'])
-	api project(':app')
-	// kotlin库如果类冲突，取消下一行注释
-	// api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.0"
+    implementation 'androidx.annotation:annotation-jvm:1.9.1'
+    implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
+    compileOnly fileTree(dir: 'provider', include: ['.jar'])
+    api project(':app')
+    // kotlin库如果类冲突，取消下一行注释
+    // api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.0"
 }

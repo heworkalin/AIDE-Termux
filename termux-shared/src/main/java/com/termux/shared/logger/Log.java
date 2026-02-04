@@ -30,37 +30,27 @@ public class Log {
 	}
 
 	public static void v(String tag, String msg) {
-		if (hasZeroAicyLog) {
-			io.github.zeroaicy.util.Log.v(tag, msg);
-		}
+
 		android.util.Log.v(tag, msg);
 	}
 
 	public static void d(String tag, String msg) {
-		if (hasZeroAicyLog) {
-			io.github.zeroaicy.util.Log.d(tag, msg);
-		}
+
 		android.util.Log.v(tag, msg);
 	}
 
 	public static void i(String tag, String msg) {
-		if (hasZeroAicyLog) {
-			io.github.zeroaicy.util.Log.i(tag, msg);
-		}
+
 		android.util.Log.v(tag, msg);
 	}
 
 	public static void w(String tag, String msg) {
-		if (hasZeroAicyLog) {
-			io.github.zeroaicy.util.Log.w(tag, msg);
-		}
+
 		android.util.Log.v(tag, msg);
 	}
 
 	public static void e(String tag, String msg) {
-		if (hasZeroAicyLog) {
-			io.github.zeroaicy.util.Log.e(tag, msg);
-		}
+
 		android.util.Log.v(tag, msg);
 	}
 

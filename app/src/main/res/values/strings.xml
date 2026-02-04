@@ -236,5 +236,7 @@
 
     <!-- Donate Preference -->
     <string name="donate_preference_title">Donate</string>
+    <string name="action_yes" />
+    <string name="action_no" />
 
 </resources>

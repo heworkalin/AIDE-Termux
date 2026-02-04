@@ -1,1 +1,13 @@
-include ':app'
+// AGP 7.0+ 推荐使用 settings.gradle（Groovy），注册所有子模块
+rootProject.name = "AIDE-Termux"
+
+// 注册主项目和所有子模块（按你的项目结构，需包含 terminal-emulator（被 terminal-view 依赖））
+include ":app"
+include ":terminal-view"
+include ":termux-shared"
+include ":terminal-emulator"
+include ":aide-termux"
+// 可选：指定子模块目录（若目录结构与模块名一致，可省略；不一致则需配置，示例如下）
+// project(":terminal-view").projectDir = file("terminal-view")
+// project(":termux-shared").projectDir = file("termux-shared")
+// project(":terminal-emulator").projectDir = file("terminal-emulator")

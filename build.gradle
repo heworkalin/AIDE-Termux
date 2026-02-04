@@ -1,12 +1,15 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     repositories {
-        jcenter()
+        // 优先配置国内镜像，提升依赖下载速度（buildscript中的仓库用于下载AGP插件）
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        // 官方仓库优先，保证AGP插件等核心依赖的完整性
+        google()
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.+'
-
+        // 已正确配置兼容Gradle 7.5的AGP版本7.4.2
+        classpath 'com.android.tools.build:gradle:8.13.2'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -14,11 +17,19 @@ buildscript {
 
 allprojects {
     repositories {
-		maven { url 'https://maven.aliyun.com/repository/public/' } 
-        maven { url 'http://repo1.maven.org/maven2/' } 
-        maven { url 'https://dl.bintray.com/ppartisan/maven/' }
+        // 1. 优先国内阿里云镜像，解决国内访问慢的问题
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        // 2. 安卓官方仓库，必须优先于其他通用仓库
+        google()
+        // 3. 通用开源依赖核心仓库
+        mavenCentral()
+        // 4. 保留有效且必要的第三方仓库（移除废弃的bintray，修正HTTP为HTTPS）
+        maven { url 'https://repo1.maven.org/maven2/' } // 修正为HTTPS，作为mavenCentral的备用
         maven { url "https://clojars.org/repo/" }
         maven { url "https://jitpack.io" }
-		jcenter()        
-	}
+
+        // 已移除：废弃的 https://dl.bintray.com/ppartisan/maven/
+        // 已移除：不安全的 http://repo1.maven.org/maven2/
+    }
 }
+

@@ -1,55 +1,57 @@
-apply plugin: 'com.android.application'
+// 核心修改 1：插件替换为库模块专属的 com.android.library
+plugins {
+    id 'com.android.library'
+}
 
 android {
-	compileSdkVersion 21
-	buildToolsVersion "21.1.0"
+    // AGP 7.0+强制要求，库模块同样需要配置namespace，不可缺少
+    namespace "com.termux"
+    // 提升compileSdk至36，保持与其他模块一致
+    compileSdk 36
 
-	defaultConfig {
-		applicationId "com.termux"
-		minSdkVersion 21
-		targetSdkVersion 28
-		// namespace "com.termux"
-		// minSdk 21
-		// targetSdk 28
+    defaultConfig {
+        // 核心修改 2：删除 applicationId（库模块无需该配置，仅应用模块有效）
+        // 已移除：applicationId "com.termux"
 
-		versionCode 1020
-		versionName "0.119.0-beta.1"
-	}
-	
-	
-	buildFeatures{
-		// true则启用 viewBinding
-		viewBinding false
-		// 使用Androidx，暂时先这样
-		useAndroidx true
-	}
-	compileOptions {
-		sourceCompatibility JavaVersion.VERSION_8
-		targetCompatibility JavaVersion.VERSION_8
-	}
+        minSdk 23
+        targetSdk 36
+        versionCode 1020
+        versionName "0.119.0-beta.1"
+    }
+
+    buildFeatures {
+        // 保持原有配置，关闭viewBinding
+        viewBinding false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-	compile fileTree(dir: 'libs', include: ['*.jar'])
-	
-	// kotlin库如果类冲突，取消下一行注释
-	// api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.0"
-	
-	implementation "androidx.annotation:annotation:1.3.0"
-	implementation "androidx.core:core:1.6.0"
-	implementation "androidx.drawerlayout:drawerlayout:1.1.1"
-	implementation "androidx.preference:preference:1.1.1"
-	implementation "androidx.viewpager:viewpager:1.0.0"
-	implementation "com.google.android.material:material:1.4.0"
-	implementation "com.google.guava:guava:33.3.1-android"
-	implementation "io.noties.markwon:core:4.6.2"
-	implementation "io.noties.markwon:ext-strikethrough:4.6.2"
-	implementation "io.noties.markwon:linkify:4.6.2"
-	implementation "io.noties.markwon:recycler:4.6.2"
+    // 旧版compile替换为implementation（废弃语法兼容问题）
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-	implementation project(":terminal-view")
-	implementation project(":termux-shared")
-	
-	// api "com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava"	
-	
+    // 关键修改：降级Kotlin版本（与AGP 7.4.2兼容，暂注释若无需Kotlin，避免冲突）
+    // 若项目需要Kotlin，需在根build.gradle添加Kotlin插件依赖，且版本匹配
+    // api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.20"
+
+    // 升级AndroidX依赖版本，适配新版AGP
+    implementation "androidx.annotation:annotation:1.6.0"
+    implementation "androidx.core:core-ktx:1.10.1" // 替换为core-ktx（更全面，兼容AndroidX）
+    implementation "androidx.drawerlayout:drawerlayout:1.2.0"
+    implementation "androidx.preference:preference-ktx:1.2.0"
+    implementation "androidx.viewpager:viewpager:1.0.0"
+    implementation "com.google.android.material:material:1.9.0"
+    implementation "com.google.guava:guava:32.1.3-android" // 降级Guava，适配低minSdk
+    implementation "io.noties.markwon:core:4.6.2"
+    implementation "io.noties.markwon:ext-strikethrough:4.6.2"
+    implementation "io.noties.markwon:linkify:4.6.2"
+    implementation "io.noties.markwon:recycler:4.6.2"
+
+    // 项目子模块依赖（保持不变，库模块可正常依赖其他库模块）
+    implementation project(":terminal-view")
+    implementation project(":termux-shared")
 }

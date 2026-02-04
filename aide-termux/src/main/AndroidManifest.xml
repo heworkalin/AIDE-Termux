@@ -3,9 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="internalOnly"
     android:sharedUserId="io.github.zeroaicy"
-    android:sharedUserLabel="@string/shared_user_label">
-	
-	<application
+    android:sharedUserLabel="@string/shared_user_label"
+    android:sharedUserMaxSdkVersion="36"
+    tools:targetApi="33">
+
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
+    <application
         android:name="io.github.zeroaicy.termux.AIDETermuxApplication"
         android:allowBackup="false"
         android:banner="@drawable/banner"
@@ -44,23 +53,7 @@
         </activity>
 		
 		<!-- MT管理器 -->
-		<activity
-			android:name="bin.mt.file.content.MTDataFilesWakeUpActivity"
-			android:exported="true"
-			android:taskAffinity="${applicationId}.MTDataFilesWakeUp"
-			android:excludeFromRecents="true"
-			android:noHistory="true" />
-		<provider
-			android:name="bin.mt.file.content.MTDataFilesProvider"
-			android:permission="android.permission.MANAGE_DOCUMENTS"
-			android:exported="true"
-			android:authorities="${applicationId}.MTDataFilesProvider"
-			android:grantUriPermissions="true">
-			<intent-filter>
-				<action
-					android:name="android.content.action.DOCUMENTS_PROVIDER" />
-			</intent-filter>
-		</provider>
+
 		
 	</application>
 	

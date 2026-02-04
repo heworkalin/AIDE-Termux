@@ -738,6 +738,7 @@ public class TermuxTerminalViewClient extends TermuxTerminalViewClientBase {
             mActivity.getString(R.string.action_yes), (dialog, which) -> reportIssueFromTranscript(transcriptText, true),
             mActivity.getString(R.string.action_no), (dialog, which) -> reportIssueFromTranscript(transcriptText, false),
             null);
+        //这里的action_no和action_yes要重
     }
 
     private void reportIssueFromTranscript(String transcriptText, boolean addTermuxDebugInfo) {
